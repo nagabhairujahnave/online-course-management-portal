@@ -17,9 +17,6 @@
 <body>
 
 
-<!-- =========================
-     HEADER
-========================= -->
 
 <header>
 
@@ -53,9 +50,7 @@
 </header>
 
 
-<!-- =========================
-     DASHBOARD
-========================= -->
+
 
 <main class="dashboard">
 
@@ -68,9 +63,7 @@
     </p>
 
 
-    <!-- =========================
-         JAVA
-    ========================= -->
+    
 
     <div class="progress-card">
 
@@ -134,9 +127,7 @@
     </div>
 
 
-    <!-- =========================
-         WEB DEVELOPMENT
-    ========================= -->
+    
 
     <div class="progress-card">
 
@@ -200,10 +191,7 @@
     </div>
 
 
-    <!-- =========================
-         AI
-    ========================= -->
-
+    
     <div class="progress-card">
 
         <div class="progress-header">
@@ -266,10 +254,7 @@
     </div>
 
 
-    <!-- =========================
-         DATA SCIENCE
-    ========================= -->
-
+   
     <div class="progress-card">
 
         <div class="progress-header">
@@ -395,7 +380,7 @@
 </main>
 
 
-<!-- FOOTER -->
+
 
 <footer>
 
@@ -406,7 +391,7 @@
 </footer>
 
 
-<!-- SUPABASE -->
+
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -415,36 +400,33 @@
 <script src="script.js"></script>
 
 
-<!-- =========================
-     DASHBOARD PROGRESS
-========================= -->
+
 
 <script>
 
 async function loadCourseProgress() {
 
-    console.log(
-        "Loading course progress..."
-    );
+    console.log("Loading course progress...");
 
-
-    // Get completed lessons
 
     const {
         data,
         error
-    } =
-        await supabaseClient
-            .from("progress")
-            .select(`
-                lesson_id,
-                completed,
-                lessons (
-                    course_id
-                )
-            `)
-            .eq("student_name", "Student")
-            .eq("completed", true);
+    } = await supabaseClient
+
+        .from("progress")
+
+        .select(`
+            lesson_id,
+            completed,
+            lessons!inner (
+                course_id
+            )
+        `)
+
+        .eq("student_name", "Student")
+
+        .eq("completed", true);
 
 
     if (error) {
@@ -465,7 +447,7 @@ async function loadCourseProgress() {
     );
 
 
-    // Course counters
+    
 
     const courseProgress = {
 
@@ -477,30 +459,41 @@ async function loadCourseProgress() {
     };
 
 
-    // Count lessons for each course
-
+    
     data.forEach(function(item) {
 
+        if (!item.lessons) {
+            return;
+        }
+
+
+        const courseId =
+            Number(item.lessons.course_id);
+
+
         if (
-            item.lessons &&
-            courseProgress[
-                item.lessons.course_id
-            ] !== undefined
+            courseId === 1 ||
+            courseId === 2 ||
+            courseId === 3 ||
+            courseId === 4
         ) {
 
-            courseProgress[
-                item.lessons.course_id
-            ]++;
+            courseProgress[courseId]++;
 
         }
 
     });
 
 
-    // Update each course
+    console.log(
+        "Course progress:",
+        courseProgress
+    );
+
+
+    
 
     updateCourse(
-        1,
         courseProgress[1],
         "javaPercentage",
         "javaProgressFill",
@@ -509,8 +502,9 @@ async function loadCourseProgress() {
     );
 
 
+    
+
     updateCourse(
-        2,
         courseProgress[2],
         "webPercentage",
         "webProgressFill",
@@ -519,8 +513,9 @@ async function loadCourseProgress() {
     );
 
 
+    
+
     updateCourse(
-        3,
         courseProgress[3],
         "aiPercentage",
         "aiProgressFill",
@@ -529,8 +524,9 @@ async function loadCourseProgress() {
     );
 
 
+    
+
     updateCourse(
-        4,
         courseProgress[4],
         "dataPercentage",
         "dataProgressFill",
@@ -539,26 +535,18 @@ async function loadCourseProgress() {
     );
 
 
-    // Overall completed lessons
-
-    const totalCompleted =
-        data.length;
-
+   
 
     document.getElementById(
         "completedLessons"
-    ).innerText =
-        totalCompleted;
+    ).innerText = data.length;
 
 }
 
 
-// ===============================
-// UPDATE COURSE
-// ===============================
+
 
 function updateCourse(
-    courseId,
     completed,
     percentageId,
     progressId,
@@ -575,17 +563,20 @@ function updateCourse(
         );
 
 
+
+
     document.getElementById(
         percentageId
     ).innerText =
         percentage + "%";
-
 
     document.getElementById(
         progressId
     ).style.width =
         percentage + "%";
 
+
+    
 
     document.getElementById(
         textId
@@ -594,6 +585,7 @@ function updateCourse(
         " of " +
         totalLessons +
         " lessons completed";
+
 
 
     let status =
@@ -605,7 +597,9 @@ function updateCourse(
         status =
             "Completed";
 
-    } else if (percentage > 0) {
+    }
+
+    else if (percentage > 0) {
 
         status =
             "In Progress";
@@ -621,9 +615,6 @@ function updateCourse(
 }
 
 
-// ===============================
-// OPEN COURSE
-// ===============================
 
 function openCourseById(courseId) {
 
@@ -633,10 +624,6 @@ function openCourseById(courseId) {
 
 }
 
-
-// ===============================
-// START
-// ===============================
 
 loadCourseProgress();
 
