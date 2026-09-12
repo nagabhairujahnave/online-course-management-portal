@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructor Sessions - LearnPortal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🎓 LearnPortal</div>
+
+    <nav>
+        <a href="index.html">Courses</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="sessions.html">Instructor Sessions</a>
+    </nav>
+
+    <button class="student-btn"
+    onclick="showStudentRole()">Student</button>
+</header>
+
+<section class="sessions-page">
+
+    <div class="sessions-header">
+        <h1>📅 Instructor Sessions</h1>
+        <p>Join live sessions and learn directly from experienced instructors.</p>
+    </div>
+
+    <div class="session-list" id="sessionContainer"></div>
+
+       
+</section>
+
+<footer>
+    <p>© 2026 LearnPortal. All rights reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

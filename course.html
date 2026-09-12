@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Course Details</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+
+<!-- HEADER -->
+
+<header>
+
+    <div class="logo">
+        🎓 LearnPortal
+    </div>
+
+    <nav>
+
+        <a href="index.html">
+            Courses
+        </a>
+
+        <a href="dashboard.html">
+            Dashboard
+        </a>
+
+        <a href="sessions.html">
+            Instructor Sessions
+        </a>
+
+    </nav>
+
+    <button class="student-btn"
+            onclick="showStudentRole()">
+
+        Student
+
+    </button>
+
+</header>
+
+
+<!-- COURSE DETAILS -->
+
+<main class="course-details">
+
+
+    <!-- COURSE HEADER -->
+
+    <div class="course-header">
+
+        <div class="big-course-icon"
+             id="courseIcon">
+
+            📚
+
+        </div>
+
+
+        <div>
+
+            <span class="category"
+                  id="courseCategory">
+
+                Course
+
+            </span>
+
+
+            <h1 id="courseTitle">
+
+                Loading course...
+
+            </h1>
+
+
+            <p id="courseShortDescription">
+
+                Loading course details...
+
+            </p>
+
+
+            <p class="instructor"
+               id="courseInstructor">
+
+                👨‍🏫 Instructor:
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ABOUT COURSE -->
+
+    <section class="course-info">
+
+        <h2>
+            About this course
+        </h2>
+
+        <p id="courseDescription">
+
+            Loading course description...
+
+        </p>
+
+    </section>
+
+
+    <!-- LESSONS -->
+
+    <section class="lessons">
+
+        <h2>
+            Course Lessons
+        </h2>
+
+
+        <div id="lessonContainer">
+
+            <p>
+                Loading lessons...
+            </p>
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <p>
+        © 2026 Online Course Management Portal
+    </p>
+
+</footer>
+
+
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase.js"></script>
+
+<script src="script.js"></script>
+
+
+<!-- LOAD COURSE -->
+
+<script>
+
+async function loadCourseDetails() {
+
+    console.log("Loading course details...");
+
+
+    // Get ID from URL
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const courseId =
+        params.get("id");
+
+
+    console.log(
+        "Course ID:",
+        courseId
+    );
+
+
+    // Check ID
+
+    if (!courseId) {
+
+        document.getElementById(
+            "courseTitle"
+        ).innerText =
+            "No course selected";
+
+        return;
+
+    }
+
+
+    // Get course
+
+    const result =
+        await supabaseClient
+            .from("courses")
+            .select("*")
+            .eq("id", Number(courseId))
+            .maybeSingle();
+
+
+    const course =
+        result.data;
+
+    const courseError =
+        result.error;
+
+
+    console.log(
+        "Course:",
+        course
+    );
+
+
+    console.log(
+        "Course error:",
+        courseError
+    );
+
+
+    // Error
+
+    if (courseError) {
+
+        console.error(
+            "Error loading course:",
+            courseError
+        );
+
+        document.getElementById(
+            "courseTitle"
+        ).innerText =
+            "Error loading course";
+
+        return;
+
+    }
+
+
+    // Course not found
+
+    if (!course) {
+
+        document.getElementById(
+            "courseTitle"
+        ).innerText =
+            "Course not found";
+
+        console.error(
+            "Course not found for ID:",
+            courseId
+        );
+
+        return;
+
+    }
+
+
+    // Display course
+
+    document.getElementById(
+        "courseTitle"
+    ).innerText =
+        course.title;
+
+
+    document.getElementById(
+        "courseIcon"
+    ).innerText =
+        course.icon || "📚";
+
+
+    document.getElementById(
+        "courseInstructor"
+    ).innerText =
+        "👨‍🏫 Instructor: " +
+        course.instructor;
+
+
+    document.getElementById(
+        "courseShortDescription"
+    ).innerText =
+        course.description ||
+        "Learn this course and improve your skills.";
+
+
+    document.getElementById(
+        "courseDescription"
+    ).innerText =
+        course.description ||
+        "This course provides useful knowledge and practical skills.";
+
+
+    // Get lessons
+
+    const lessonResult =
+        await supabaseClient
+            .from("lessons")
+            .select("*")
+            .eq("course_id", course.id)
+            .order("lesson_number");
+
+
+    const lessons =
+        lessonResult.data;
+
+    const lessonError =
+        lessonResult.error;
+
+
+    console.log(
+        "Lessons:",
+        lessons
+    );
+
+
+    console.log(
+        "Lesson error:",
+        lessonError
+    );
+
+
+    const lessonContainer =
+        document.getElementById(
+            "lessonContainer"
+        );
+
+
+    // Lesson error
+
+    if (lessonError) {
+
+        lessonContainer.innerHTML =
+            "<p>Unable to load lessons.</p>";
+
+        console.error(
+            "Error loading lessons:",
+            lessonError
+        );
+
+        return;
+
+    }
+
+
+    // Clear loading text
+
+    lessonContainer.innerHTML = "";
+
+
+    // No lessons
+
+    if (
+        !lessons ||
+        lessons.length === 0
+    ) {
+
+        lessonContainer.innerHTML = `
+
+            <p>
+                Lessons for this course
+                will be available soon.
+            </p>
+
+        `;
+
+        return;
+
+    }
+
+
+    // Display lessons
+
+    lessons.forEach(
+        function(lesson) {
+
+            lessonContainer.innerHTML += `
+
+                <div class="lesson">
+
+                    <div>
+
+                        <span>
+                            Lesson ${lesson.lesson_number}
+                        </span>
+
+                        <h3>
+                            ${lesson.title}
+                        </h3>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        onclick="startLesson(
+                            ${lesson.lesson_number},
+                            ${course.id}
+                        )">
+
+                        Start Lesson
+
+                    </button>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+}
+
+
+// Start loading
+
+loadCourseDetails();
+
+</script>
+
+
+</body>
+
+</html>

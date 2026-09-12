@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Lesson - Online Course Portal</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        🎓 LearnPortal
+    </div>
+
+    <nav>
+
+        <a href="index.html">
+            Courses
+        </a>
+
+        <a href="dashboard.html">
+            Dashboard
+        </a>
+
+        <a href="sessions.html">
+            Instructor Sessions
+        </a>
+
+    </nav>
+
+    <button class="student-btn"
+            onclick="showStudentRole()">
+        Student
+    </button>
+
+</header>
+
+
+<main class="lesson-page">
+
+    <div class="lesson-container">
+
+        <span class="category"
+              id="lessonNumber">
+            Loading...
+        </span>
+
+        <h1 id="lessonTitle">
+            Loading lesson...
+        </h1>
+
+        <p class="lesson-description"
+           id="lessonDescription">
+            Loading lesson content...
+        </p>
+
+        <hr>
+
+
+        <h2>
+            Lesson Content
+        </h2>
+
+        <p id="lessonContent">
+            Loading...
+        </p>
+
+
+        <!-- Complete Button -->
+
+        <div class="complete-section">
+
+            <button
+                id="completeButton"
+                onclick="completeLesson()">
+
+                ✅ Mark as Complete
+
+            </button>
+
+            <p id="completionMessage"></p>
+
+        </div>
+
+
+        <div class="lesson-navigation">
+
+            <a href="course.html"
+               id="backToCourse">
+
+                ← Back to Course
+
+            </a>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<footer>
+
+    <p>
+        © 2026 Online Course Management Portal
+    </p>
+
+</footer>
+
+
+<!-- Supabase -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase.js"></script>
+
+<script src="script.js"></script>
+
+
+<script>
+
+async function loadLesson() {
+
+    console.log("Loading selected lesson...");
+
+
+    const courseId =
+        localStorage.getItem("currentCourse");
+
+    const lessonNumber =
+        localStorage.getItem("currentLesson");
+
+
+    console.log("Course ID:", courseId);
+
+    console.log("Lesson Number:", lessonNumber);
+
+
+    if (!courseId || !lessonNumber) {
+
+        document.getElementById("lessonTitle").innerText =
+            "Lesson not selected";
+
+        return;
+    }
+
+
+    // Get lesson from Supabase
+
+    const { data: lesson, error } =
+        await supabaseClient
+            .from("lessons")
+            .select("*")
+            .eq("course_id", Number(courseId))
+            .eq("lesson_number", Number(lessonNumber))
+            .maybeSingle();
+
+
+    console.log("Selected lesson:", lesson);
+
+    console.log("Lesson error:", error);
+
+
+    if (error || !lesson) {
+
+        document.getElementById("lessonTitle").innerText =
+            "Lesson not found";
+
+        console.error(error);
+
+        return;
+    }
+
+
+    // Display lesson
+
+    document.getElementById("lessonNumber").innerText =
+        "Lesson " + lesson.lesson_number;
+
+
+    document.getElementById("lessonTitle").innerText =
+        lesson.title;
+
+
+    document.getElementById("lessonDescription").innerText =
+        lesson.content;
+
+
+    document.getElementById("lessonContent").innerText =
+        lesson.content;
+
+
+    // Back to course
+
+    document.getElementById("backToCourse").href =
+        "course.html?course=" +
+        encodeURIComponent(
+            getCourseName(courseId)
+        );
+
+}
+
+
+// Get course name
+
+async function getCourseName(courseId) {
+
+    const { data: course } =
+        await supabaseClient
+            .from("courses")
+            .select("title")
+            .eq("id", Number(courseId))
+            .maybeSingle();
+
+    return course ? course.title : "";
+}
+
+
+loadLesson();
+
+</script>
+
+</body>
+
+</html>

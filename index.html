@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Online Course Management Portal</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+
+<!-- HEADER -->
+
+<header>
+
+    <div class="logo">
+        🎓 LearnPortal
+    </div>
+
+    <nav>
+
+        <a href="index.html" class="active">
+            Courses
+        </a>
+
+        <a href="dashboard.html">
+            Dashboard
+        </a>
+
+        <a href="sessions.html">
+            Instructor Sessions
+        </a>
+
+    </nav>
+
+    <button class="student-btn"
+            onclick="showStudentRole()">
+
+        Student
+
+    </button>
+
+</header>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <h1>
+        Learn. Grow. Succeed.
+    </h1>
+
+    <p>
+        Browse courses, complete lessons and track your learning progress.
+    </p>
+
+</section>
+
+
+<!-- COURSE CATALOG -->
+
+<main>
+
+    <div class="catalog-header">
+
+        <div>
+
+            <h2>
+                Course Catalog
+            </h2>
+
+            <p>
+                Explore our available courses
+            </p>
+
+        </div>
+
+        <input
+            type="text"
+            id="searchBox"
+            placeholder="Search courses..."
+            onkeyup="searchCourses()">
+
+    </div>
+
+
+    <div class="course-container">
+
+
+        <!-- JAVA -->
+
+        <div class="course-card">
+
+            <div class="course-image">
+                💻
+            </div>
+
+            <div class="course-content">
+
+                <span class="category">
+                    Programming
+                </span>
+
+                <h3>
+                    Java Programming
+                </h3>
+
+                <p>
+                    Learn Java fundamentals, object-oriented
+                    programming and basic applications.
+                </p>
+
+                <p class="instructor">
+                    👨‍🏫 Instructor: Dr. Rahul
+                </p>
+
+                <button
+                    type="button"
+                    onclick="window.location.href='course.html?id=1'">
+
+                    View Course
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- WEB DEVELOPMENT -->
+
+        <div class="course-card">
+
+            <div class="course-image">
+                🌐
+            </div>
+
+            <div class="course-content">
+
+                <span class="category">
+                    Web Development
+                </span>
+
+                <h3>
+                    Web Development
+                </h3>
+
+                <p>
+                    Learn HTML, CSS and JavaScript to create
+                    interactive websites.
+                </p>
+
+                <p class="instructor">
+                    👩‍🏫 Instructor: Prof. Priya
+                </p>
+
+                <button
+                    type="button"
+                    onclick="window.location.href='course.html?id=2'">
+
+                    View Course
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- AI -->
+
+        <div class="course-card">
+
+            <div class="course-image">
+                🤖
+            </div>
+
+            <div class="course-content">
+
+                <span class="category">
+                    Artificial Intelligence
+                </span>
+
+                <h3>
+                    Introduction to AI
+                </h3>
+
+                <p>
+                    Understand artificial intelligence concepts,
+                    applications and techniques.
+                </p>
+
+                <p class="instructor">
+                    👨‍🏫 Instructor: Dr. Arun
+                </p>
+
+                <button
+                    type="button"
+                    onclick="window.location.href='course.html?id=3'">
+
+                    View Course
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- DATA SCIENCE -->
+
+        <div class="course-card">
+
+            <div class="course-image">
+                📊
+            </div>
+
+            <div class="course-content">
+
+                <span class="category">
+                    Data Science
+                </span>
+
+                <h3>
+                    Data Science Basics
+                </h3>
+
+                <p>
+                    Learn data analysis, visualization and
+                    fundamental data science concepts.
+                </p>
+
+                <p class="instructor">
+                    👩‍🏫 Instructor: Prof. Anitha
+                </p>
+
+                <button
+                    type="button"
+                    onclick="window.location.href='course.html?id=4'">
+
+                    View Course
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <p>
+        © 2026 Online Course Management Portal
+    </p>
+
+</footer>
+
+
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase.js"></script>
+
+<script src="script.js"></script>
+
+
+</body>
+
+</html>
